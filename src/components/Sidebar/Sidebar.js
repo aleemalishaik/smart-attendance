@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-import { NavLink as NavLinkRRD, Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink as NavLinkRRD, Link, useNavigate } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import {
   Collapse,
-  DropdownMenu,
-  DropdownItem,
   UncontrolledDropdown,
   DropdownToggle,
   Media,
@@ -13,21 +11,17 @@ import {
   NavItem,
   NavLink,
   Nav,
-  Progress,
-  Table,
   Container,
   Row,
   Col,
+  DropdownMenu,
+  DropdownItem
 } from "reactstrap";
 
 const Sidebar = (props) => {
-  const [collapseOpen, setCollapseOpen] = useState();
+  const [collapseOpen, setCollapseOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(localStorage.getItem("profileImage"));
- 
   const navigate = useNavigate();
-
-
-
 
   // Function to toggle sidebar collapse
   const toggleCollapse = () => {
@@ -42,6 +36,7 @@ const Sidebar = (props) => {
   };
 
   const { bgColor, routes, logo } = props;
+
   let navbarBrandProps;
   if (logo && logo.innerLink) {
     navbarBrandProps = {
@@ -55,6 +50,9 @@ const Sidebar = (props) => {
     };
   }
 
+  // Filter routes to exclude those with invisible: true
+  const visibleRoutes = routes.filter((route) => !route.invisible);
+
   return (
     <Navbar className="navbar-vertical fixed-left navbar-light bg-white" expand="md" id="sidenav-main">
       <Container fluid>
@@ -62,13 +60,13 @@ const Sidebar = (props) => {
         <button className="navbar-toggler" type="button" onClick={toggleCollapse}>
           <span className="navbar-toggler-icon" />
         </button>
+        
         {/* Brand */}
         {logo ? (
           <NavbarBrand className="pt-0" {...navbarBrandProps}>
             <img alt={logo.imgAlt} className="navbar-brand-img" src={logo.imgSrc} />
           </NavbarBrand>
         ) : null}
-
 
         {/* User Profile Image (From localStorage) */}
         <Nav className="align-items-center d-md-none">
@@ -78,7 +76,7 @@ const Sidebar = (props) => {
                 <span className="avatar avatar-sm rounded-circle">
                   <img
                     alt="Admin"
-                    src={profileImage || require("../../assets/img/theme/vue.jpg")}
+                    src={profileImage || require("../../assets/img/admin/angular.jpg")}
                     className="brand-logo"
                     style={{ width: "40px", height: "40px", objectFit: "cover" }}
                   />
@@ -87,7 +85,7 @@ const Sidebar = (props) => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-arrow" right>
               <DropdownItem to="/auth/login" onClick={handleLogout} tag={Link}>
-                <i className="ni ni-button-power" />  
+                <i className="ni ni-button-power" />
                 <span>Logout</span>
               </DropdownItem>
             </DropdownMenu>
@@ -123,7 +121,7 @@ const Sidebar = (props) => {
 
           {/* Navigation */}
           <Nav navbar>
-            {routes.map((prop, key) => (
+            {visibleRoutes.map((prop, key) => (
               <NavItem key={key}>
                 <NavLink to={prop.layout + prop.path} tag={NavLinkRRD} onClick={() => setCollapseOpen(false)}>
                   <i className={prop.icon} />

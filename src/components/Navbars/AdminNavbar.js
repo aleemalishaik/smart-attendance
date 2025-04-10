@@ -21,7 +21,7 @@ const AdminNavbar = ({ admin }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("profileImage") || require("D:/smart attendance/src/assets/img/admin/angular.jpg")
+    localStorage.getItem("profileImage") || require("../../assets/img/brand/brand.png")
   );
 
   // **Extract Active Page Name**

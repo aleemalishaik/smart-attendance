@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -21,6 +22,7 @@ import {
 import axios from "axios";
 import Header from "components/Headers/Header.js";
 
+
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,10 +33,8 @@ const ManageUsers = () => {
   const [newUser, setNewUser] = useState({ name: "", email: "", employeeId: "", file: null });
 
   const token = localStorage.getItem("Authorization");
+  const navigate = useNavigate(); // ✅ useNavigate inside component
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const fetchUsers = async () => {
     if (!token) {
@@ -42,7 +42,7 @@ const ManageUsers = () => {
       return;
     }
     try {
-      const response = await axios.get("http://localhost:8080/api/users/all", {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/all`, {
         headers: { Authorization: token },
       });
       setUsers(response.data);
@@ -105,7 +105,7 @@ const ManageUsers = () => {
       formData.append("employeeId", newUser.employeeId.trim());
       formData.append("file", newUser.file);
 
-      const response = await axios.post("http://localhost:8080/api/users/register", formData, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/users/register`, formData, {
         headers: { Authorization: token, "Content-Type": "multipart/form-data" },
       });
 
@@ -129,7 +129,7 @@ const ManageUsers = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8080/api/users/update/${selectedUser.employeeId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/users/update/${selectedUser.employeeId}`,
         updates,
         { headers: { Authorization: token } }
       );
@@ -149,7 +149,7 @@ const ManageUsers = () => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/users/delete/${selectedUser.employeeId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/users/delete/${selectedUser.employeeId}`,
         { headers: { Authorization: token } }
       );
 
@@ -162,6 +162,15 @@ const ManageUsers = () => {
     }
   };
 
+  // ✅ Function to navigate to User Stats Page
+  const viewStats = (employeeId) => {
+    navigate(`/admin/user-stats/${employeeId}`);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <>
       <Header />
@@ -170,10 +179,10 @@ const ManageUsers = () => {
           <div className="col">
             <Card className="shadow">
               <CardHeader className="border-0">
-                <h3 className="mb-0">Users List</h3>
+                <h3 className="mb-0">USERS</h3>
               </CardHeader>
               <CardBody>
-                <Table className="align-items-center table-flush" responsive>
+                <Table className="align-items-center table-hover table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
                       <th scope="col">User Id</th>
@@ -193,6 +202,8 @@ const ManageUsers = () => {
                         <td>{user.imagePath}</td>
                         <td>{user.createdAtFormatted}</td>
                         <td>
+                          <Button color="info" size="sm" onClick={() => viewStats(user.employeeId)}>
+                            View Stats</Button>
                           <Button color="primary" size="sm" onClick={() => openUpdateModal(user)}>
                             Update
                           </Button>

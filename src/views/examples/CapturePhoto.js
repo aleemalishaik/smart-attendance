@@ -30,7 +30,7 @@ const CapturePhoto = ({ onScanComplete }) => {
         formData.append("file", blob, "scan.jpg");
 
         try {
-            const response = await fetch("http://localhost:8080/api/face_auth/scan", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/face_auth/scan`, {
                 method: "POST",
                 body: formData,
             });

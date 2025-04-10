@@ -39,7 +39,7 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState(""); // Confirm new password
   const [success, setSuccess] = useState("");
   const [profileImage, setProfileImage] = useState(
-    localStorage.getItem("profileImage") || require("D:/smart attendance/src/assets/img/admin/angular.jpg") // Load saved image
+    localStorage.getItem("profileImage") || require("assets/img/admin/angular.jpg") // Load saved image
   );
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,7 +75,7 @@ const Profile = () => {
         return;
       }
 
-      await axios.patch(`http://localhost:8080/api/admin/update/${admin.id}`, updatedData, {
+      await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/admin/update/${admin.id}`, updatedData, {
         headers: { Authorization: token },
       });
 
@@ -102,7 +102,7 @@ const Profile = () => {
           return;
         }
 
-        const response = await axios.get("http://localhost:8080/api/admin/me", {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/me`, {
           headers: { Authorization: token },
         });
 
@@ -166,17 +166,17 @@ const Profile = () => {
                 </Col>
 
               </Row>
-              <CardHeader className="bg-white border-0">
-                <Row className="align-items-center">
-                  <Col xs="8">
-                    <h3 className="mb-0">My Account</h3>
+              <CardHeader className="border-0" style={{backgroundColor:"transparent"}}>
+                <Row className="align-items-center mt-0">
+                  <Col xs="8" className="mt-0">
+                    <h3 className="mb-0 mt-0">MY ACCOUNT</h3>
                   </Col>
                 </Row>
               </CardHeader>
               <CardBody>
                 <Form>
                   <h6 className="heading-small text-muted mb-4">
-                    User Information
+                    Admin Information
                   </h6>
                   <div className="pl-lg-4">
                     <Row>

@@ -39,7 +39,7 @@ const UserHeader = ({ admin }) => {
         <Container className="d-flex align-items-center" fluid>
           <Row>
             <Col lg="12" md="12">
-              <h1 className="display-2 text-white">Hello {admin?.username || "Admin"}</h1>
+              <h1 className="display-2 text-white" style={{textTransform:"capitalize"}}>Hello {admin?.username || "Admin"}</h1>
             </Col>
           </Row>
         </Container>

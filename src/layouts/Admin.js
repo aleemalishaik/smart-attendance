@@ -65,7 +65,7 @@ const Admin = (props) => {
       <div className="main-content" ref={mainContent}>
         <Routes>
           {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/admin/index" replace />} />
+          <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
         </Routes>
         <Container fluid>
           <AdminNavbar />

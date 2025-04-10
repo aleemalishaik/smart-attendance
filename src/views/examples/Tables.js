@@ -1,24 +1,5 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-// reactstrap components
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-// import AdminNavbar from 'components/Navbars/AdminNavbar';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardHeader,
@@ -26,17 +7,28 @@ import {
   Table,
   Container,
   Row,
-} from 'reactstrap';
-// Core Components
-import Header from 'components/Headers/Header.js';
+  Col,
+  Button,
+} from "reactstrap";
+import { CSVLink } from "react-csv";
+import Header from "components/Headers/Header.js";
 
 const Tables = () => {
   const [users, setUsers] = useState([]);
-  const token = localStorage.getItem("Authorization"); // ✅ Corrected key: "Authorization"
+  const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem("Authorization");
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    fetchUsers();
-  }, []); // ✅ No dependency warning now
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    await Promise.all([fetchUsers(), fetchAdmins()]);
+    setLoading(false);
+  };
 
   const fetchUsers = async () => {
     if (!token) {
@@ -44,59 +36,143 @@ const Tables = () => {
       return;
     }
     try {
-      const response = await axios.get("http://localhost:8080/api/users/all", {
+      const response = await axios.get(`${BASE_URL}/users/all`, {
         headers: {
-          Authorization: token, // ✅ Corrected: send the token with Bearer prefix
+          Authorization: token,
         },
       });
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
-      if (error.response && error.response.status === 401 || error.response.status === 403) {
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
         alert("Session expired or unauthorized. Please log in again.");
-        localStorage.removeItem("Authorization"); // Corrected: remove the correct item.
-        window.location.href = "/auth/login"; // Redirect to login page
+        localStorage.removeItem("Authorization");
+        window.location.href = "/auth/login";
       }
     }
   };
 
+  const fetchAdmins = async () => {
+    if (!token) return;
+    try {
+      const response = await axios.get(`${BASE_URL}/admin/all`, {
+        headers: { Authorization: token },
+      });
+      setAdmins(response.data);
+    } catch (error) {
+      console.error("Error fetching admins:", error);
+    }
+  };
+
+  const csvDataUsers = users.map((user) => ({
+    "User Id": user.employeeId,
+    Username: user.name,
+    Email: user.email,
+    "Image Path": user.imagePath,
+    "Created At": user.createdAtFormatted,
+  }));
+
+  const csvDataAdmins = admins.map((admin) => ({
+    "Admin Id": admin.id,
+    Username: admin.username,
+    Email: admin.email,
+    "Super Admin": admin.isSuperAdmin ? "Yes" : "No",
+    "Created At": admin.createdAtFormatted,
+  }));
+
   return (
     <>
-      {/* <AdminNavbar /> */}
       <Header />
       <Container className="mt--7" fluid>
         <Row>
-          <div className="col">
+          <Col className="mb-4" lg="6">
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <h3 className="mb-0">User List</h3>
+              <CardHeader className="border-0 d-flex justify-content-between align-items-center">
+                <h3 className="mb-0">ADMINS</h3>
+
               </CardHeader>
               <CardBody>
-                <Table className="align-items-center table-flush" responsive>
-                  <thead className="thead-light">
-                    <tr>
-                      <th scope="col">User Id</th>
-                      <th scope="col">Username</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Image path</th>
-                      <th scope="col">Created At</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user) => (
-                      <tr key={user.id}>
-                        <td>{user.employeeId}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{user.imagePath}</td>
-                        <td>{user.createdAtFormatted}</td>
+                {loading ? (
+                  <p>Loading admin data...</p>
+                ) : (
+                  <Table className="align-items-center table-hover table-flush" responsive>
+                    <thead className="thead-light">
+                      <tr>
+                        <th scope="col">Admin Id</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Super Admin</th>
+                        <th scope="col">Created At</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {admins.map((admin) => (
+                        <tr key={admin.id}>
+                          <td>{admin.id}</td>
+                          <td>{admin.username}</td>
+                          <td>{admin.email}</td>
+                          <td>{admin.isSuperAdmin ? "Yes" : "No"}</td>
+                          <td>{admin.createdAtFormatted}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
               </CardBody>
+              <CSVLink
+                data={csvDataAdmins}
+                filename="admins_data.csv"
+                className="btn btn-primary m-3"
+                target="_blank"
+              >
+                Export Admins (CSV)
+              </CSVLink>
             </Card>
-          </div>
+          </Col>
+
+          <Col lg="6">
+            <Card className="shadow">
+              <CardHeader className="border-0 d-flex justify-content-between align-items-center">
+                <h3 className="mb-0">USERS</h3>
+              </CardHeader>
+              <CardBody>
+                {loading ? (
+                  <p>Loading user data...</p>
+                ) : (
+                  <Table className="align-items-center table-hover table-flush" responsive>
+                    <thead className="thead-light">
+                      <tr>
+                        <th scope="col">User Id</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Image Path</th>
+                        <th scope="col">Created At</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users.map((user) => (
+                        <tr key={user.employeeId}>
+                          <td>{user.employeeId}</td>
+                          <td>{user.name}</td>
+                          <td>{user.email}</td>
+                          <td>{user.imagePath}</td>
+                          <td>{user.createdAtFormatted}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
+              </CardBody>
+              <CSVLink
+                data={csvDataUsers}
+                filename="users_data.csv"
+                className="btn btn-primary m-3"
+                target="_blank"
+              >
+                Export Users (CSV)
+              </CSVLink>
+            </Card>
+          </Col>
         </Row>
       </Container>
     </>

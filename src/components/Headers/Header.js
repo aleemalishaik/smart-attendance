@@ -25,6 +25,7 @@ const Header = () => {
     todayTotal: 0,
     successfulToday: 0,
   });
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     fetchAttendanceStats();
@@ -32,11 +33,9 @@ const Header = () => {
 
   const fetchAttendanceStats = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/attendance/stats", {
+      const response = await fetch(`${BASE_URL}/attendance/stats`, {
         headers: { Authorization: localStorage.getItem("Authorization") },
       });
-      console.clear();
-      console.log(response);
       if (!response.ok) throw new Error("Failed to fetch attendance stats");
 
       const data = await response.json();
@@ -86,7 +85,7 @@ const Header = () => {
                       </div>
                       <Col className="col-auto">
                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="ni ni-single-02" />
+                          <i className="fas fa-user-check" />
                         </div>
                       </Col>
                     </Row>

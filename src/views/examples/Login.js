@@ -30,12 +30,11 @@ const Login = () => {
     console.log("🔍 Logging in with:", identifier, password); // ✅ Debugging log
 
     try {
-      const response = await axios.post("http://localhost:8080/api/admin/login", {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/admin/login`, {
         identifier, // ✅ Correct field name (username or email)
         password,
       });
 
-      console.log("✅ Response:", response.data); // ✅ Debug response
 
       if (response.data.token) {
         localStorage.setItem("Authorization", "Bearer " + response.data.token); // Store token properly

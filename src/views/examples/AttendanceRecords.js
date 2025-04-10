@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, CardHeader, CardBody, Container, Row, Table } from "reactstrap";
+import { Card, CardHeader, CardBody, Container, Row, Table, Col } from "reactstrap";
 import Header from "components/Headers/Header.js";
+import { CSVLink } from "react-csv"; // Import CSVLink from react-csv
 
 const AttendanceRecords = () => {
   const [attendance, setAttendance] = useState([]);
@@ -19,7 +20,7 @@ const AttendanceRecords = () => {
     }
 
     try {
-      const response = await axios.get("http://localhost:8080/api/attendance/all", {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/attendance/all`, {
         headers: { Authorization: token },
       });
 
@@ -29,7 +30,6 @@ const AttendanceRecords = () => {
       console.error("Error fetching attendance records:", error);
     }
   };
-
 
   const formatDateTime = (dateInput) => {
     if (!dateInput) return "N/A"; // Handle empty values
@@ -61,12 +61,38 @@ const AttendanceRecords = () => {
     });
   };
 
+  // Prepare the data for CSV export
+  const csvData = attendance.map((record) => ({
+    "User ID": record.employeeId,
+    "Name": record.name,
+    "Scanned At": formatDateTime(record.scannedAt),
+    "Status": record.status,
+  }));
 
+  const csvHeaders = [
+    { label: "User ID", key: "User ID" },
+    { label: "Name", key: "Name" },
+    { label: "Scanned At", key: "Scanned At" },
+    { label: "Status", key: "Status" },
+  ];
 
   return (
     <>
       <Header />
       <Container className="mt--7" fluid>
+        {/* Align the CSV export button to the right */}
+        <Row className="mb-3">
+          <Col className="text-right">  {/* Align button to the right */}
+            <CSVLink
+              data={csvData}
+              headers={csvHeaders}
+              filename="attendance_records.csv"
+              className="btn btn-primary"
+            >
+              Export Attendance Records (CSV)
+            </CSVLink>
+          </Col>
+        </Row>
         <Row>
           <div className="col">
             <Card className="shadow">
@@ -74,7 +100,7 @@ const AttendanceRecords = () => {
                 <h3 className="mb-0">Attendance Records</h3>
               </CardHeader>
               <CardBody>
-                <Table className="align-items-center table-flush" responsive>
+                <Table className="align-items-center table-hover table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
                       <th>User ID</th>
@@ -94,6 +120,8 @@ const AttendanceRecords = () => {
                     ))}
                   </tbody>
                 </Table>
+
+
               </CardBody>
             </Card>
           </div>

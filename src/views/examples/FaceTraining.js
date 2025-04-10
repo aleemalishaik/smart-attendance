@@ -34,16 +34,18 @@ const FaceTraining = () => {
 
   // ✅ State for notifications
   const [notification, setNotification] = useState({ message: "", type: "" });
-
   useEffect(() => {
     fetchImages();
   }, []);
 
   const fetchImages = async () => {
+    console.log("🔍 REACT_APP_BACKEND_URL =", process.env.REACT_APP_BACKEND_URL); // ✅ This logs the env variable
+    console.log("🔍 REACT_APP_PYTHON_URL =", process.env.REACT_APP_PYTHON_URL); // ✅ This logs the env variable
     try {
-      const response = await axios.get("http://localhost:8080/api/images", {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/images`, {
         headers: { Authorization: token },
       });
+
       setImages(response.data);
     } catch (error) {
       console.error("Error fetching images:", error);
@@ -81,12 +83,13 @@ const FaceTraining = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("http://localhost:8000/update_face/", formData);
+      const response = await axios.post(`${process.env.REACT_APP_PYTHON_URL}/update_face`, formData);
       setNotification({ type: "success", message: response.data.message }); // ✅ Show success notification
       setIsModalOpen(false);
     } catch (error) {
       setNotification({ type: "danger", message: error.response?.data?.detail || "Failed to update face!" }); // ✅ Show error notification
     }
+
   };
 
   return (
@@ -97,9 +100,9 @@ const FaceTraining = () => {
           <Col>
             <Card className="shadow">
               <CardHeader className="border-0">
-                <h3 className="mb-0 text-warning">
-                  <i className="ni ni-notification-70 text-warning mr-2"></i>
-                  You Can Only Train The Faces For The Users Who Are Already Registered.
+                <h3 className="mb-4 ">
+                  <i className="fas fa-ban fa-lg text-red mr-2"></i>
+                  You Can Only Train The Faces Again For The Users Who Are Already Registered.
                 </h3>
               </CardHeader>
               <CardBody>
@@ -126,12 +129,18 @@ const FaceTraining = () => {
                         }}
                       >
                         <img
-                          src={`http://localhost:8080${image}`}
+                          src={`${process.env.REACT_APP_BACKEND_URL}${image}`}
                           alt="Face"
                           className="img-fluid rounded"
-                          style={{ maxWidth: "100%", height: "auto" }}
+                          style={{
+                            width: "100%", // Set a fixed width
+                            height: "250px", // Maintain consistent height (adjustable)
+                            objectFit: "cover", // Ensure image fills the space without stretching
+                            borderRadius: "8px", // Rounded corners for better look
+                          }}
                         />
                       </div>
+
                       {/* ✅ Display Image Name Below Image */}
                       <p className="mt-2 font-weight-bold">{extractImageName(image)}</p>
 
@@ -146,6 +155,7 @@ const FaceTraining = () => {
                     </Col>
                   ))}
                 </Row>
+
               </CardBody>
             </Card>
           </Col>

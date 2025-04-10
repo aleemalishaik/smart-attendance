@@ -32,7 +32,7 @@ const SystemSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/settings", {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/settings`, {
         headers: { Authorization: token },
       });
       setSettings(response.data);
@@ -53,7 +53,7 @@ const SystemSettings = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put("http://localhost:8080/api/settings", updatedSettings, {
+      const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/settings`, updatedSettings, {
         headers: { Authorization: token, "Content-Type": "application/json" },
       });
       showNotification("success", response.data);
@@ -72,7 +72,7 @@ const SystemSettings = () => {
           <div className="col">
             <Card className="shadow">
               <CardHeader className="border-0">
-                <h3 className="mb-0">System Settings</h3>
+                <h3 className="mb-0">SYSTEM SETTINGS</h3>
               </CardHeader>
               <CardBody>
                 {notification && (

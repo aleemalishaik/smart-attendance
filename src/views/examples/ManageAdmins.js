@@ -42,7 +42,7 @@ const ManageAdmins = () => {
         if (!token) return;
 
         try {
-            const response = await axios.get("http://localhost:8080/api/admin/all", {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/all`, {
                 headers: { Authorization: token },
             });
             setAdmins(response.data);
@@ -96,7 +96,7 @@ const ManageAdmins = () => {
         console.log(newAdmin);
         try {
             console.log(newAdmin);
-            const response = await axios.post("http://localhost:8080/api/admin/register", newAdmin, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/admin/register`, newAdmin, {
                 headers: { Authorization: token, "Content-Type": "application/json" },
             });
             console.log(newAdmin);
@@ -119,7 +119,7 @@ const ManageAdmins = () => {
 
         try {
             const response = await axios.patch(
-                `http://localhost:8080/api/admin/update/${selectedAdmin.id}`,
+                `${process.env.REACT_APP_BACKEND_URL}/admin/update/${selectedAdmin.id}`,
                 updates,
                 { headers: { Authorization: token } }
             );
@@ -138,7 +138,7 @@ const ManageAdmins = () => {
 
         try {
             const response = await axios.delete(
-                `http://localhost:8080/api/admin/delete?username=${selectedAdmin.username}`,
+                `${process.env.REACT_APP_BACKEND_URL}/admin/delete?username=${selectedAdmin.username}`,
                 { headers: { Authorization: token } }
             );
 
@@ -160,10 +160,10 @@ const ManageAdmins = () => {
                     <div className="col">
                         <Card className="shadow">
                             <CardHeader className="border-0">
-                                <h3 className="mb-0">Admins List</h3>
+                                <h3 className="mb-0">ADMINS</h3>
                             </CardHeader>
                             <CardBody>
-                                <Table className="align-items-center table-flush" responsive>
+                                <Table className="align-items-center table-hover table-flush" responsive>
                                     <thead className="thead-light">
                                         <tr>
                                             <th scope="col">Admin Id</th>
@@ -183,7 +183,7 @@ const ManageAdmins = () => {
                                                 <td>{admin.isSuperAdmin ? "Yes" : "No"}</td>
                                                 <td>{admin.createdAtFormatted}</td>
                                                 <td>
-                                                    <Button color="info" size="sm" onClick={() => openUpdateModal(admin)}>Edit</Button>
+                                                    <Button color="primary" size="sm" onClick={() => openUpdateModal(admin)}>Update</Button>
                                                     <Button color="danger" size="sm" onClick={() => openDeleteModal(admin)}>Delete</Button>
                                                 </td>
                                             </tr>
