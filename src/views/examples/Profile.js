@@ -131,7 +131,19 @@ const Profile = () => {
 
   return (
     <>
-     {/* <AdminNavbar admin={admin} /> */}
+      {error && (
+        <Alert color="danger" className="alert-slide-up fade show">
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert color="success" className="alert-slide-up fade show">
+          {success}
+        </Alert>
+      )}
+
+      {/* <AdminNavbar admin={admin} /> */}
       <UserHeader admin={admin} />
       {/* Page content */}
       <Container className="mt--7" fluid>
@@ -151,8 +163,8 @@ const Profile = () => {
                         id="tooltip-pic"
                       />
                       <UncontrolledTooltip delay={0} placement="left" target="tooltip-pic" data-placement="left">
-                            {"Click To add Photo"}
-                          </UncontrolledTooltip>
+                        {"Click To add Photo"}
+                      </UncontrolledTooltip>
                     </label>
                     {/* Hidden File Input */}
                     <input
@@ -166,7 +178,7 @@ const Profile = () => {
                 </Col>
 
               </Row>
-              <CardHeader className="border-0" style={{backgroundColor:"transparent"}}>
+              <CardHeader className="border-0" style={{ backgroundColor: "transparent" }}>
                 <Row className="align-items-center mt-0">
                   <Col xs="8" className="mt-0">
                     <h3 className="mb-0 mt-0">MY ACCOUNT</h3>
@@ -251,11 +263,9 @@ const Profile = () => {
         <Modal isOpen={isModalOpen} toggle={toggleModal}>
           <ModalHeader toggle={toggleModal}>Update Profile</ModalHeader>
           <ModalBody>
-            {error && <Alert color="danger">{error}</Alert>}
-            {success && <Alert color="success">{success}</Alert>}
             <Form onSubmit={handleFormSubmit}>
               <FormGroup>
-                <Label for="username"  className="form-control-label">Username</Label>
+                <Label for="username" className="form-control-label">Username</Label>
                 <InputGroup className="input-group-alternative">
                   <Input
                     type="text"
@@ -267,7 +277,7 @@ const Profile = () => {
                 </InputGroup>
               </FormGroup>
               <FormGroup>
-                <Label for="email"  className="form-control-label">Email</Label>
+                <Label for="email" className="form-control-label">Email</Label>
                 <InputGroup className="input-group-alternative">
                   <Input
                     type="email"

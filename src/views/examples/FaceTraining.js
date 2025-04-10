@@ -108,7 +108,11 @@ const FaceTraining = () => {
               <CardBody>
                 {/* ✅ Show Notification Here */}
                 {notification.message && (
-                  <Alert color={notification.type} toggle={() => setNotification({ message: "", type: "" })}>
+                  <Alert
+                    color={notification.type}
+                    className="alert-slide-up fade show"
+                    toggle={() => setNotification({ message: "", type: "" })}
+                  >
                     {notification.message}
                   </Alert>
                 )}

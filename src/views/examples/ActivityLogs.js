@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "components/Headers/Header";
-import { Card, CardBody, Container, Row, Col, Table, Button } from "reactstrap";
+import { Card, CardBody, Container, Row, Col, Table } from "reactstrap";
 import { CSVLink } from "react-csv"; // Import CSVLink from react-csv
 
 const ActivityLogs = () => {

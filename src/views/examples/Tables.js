@@ -7,8 +7,7 @@ import {
   Table,
   Container,
   Row,
-  Col,
-  Button,
+  Col
 } from "reactstrap";
 import { CSVLink } from "react-csv";
 import Header from "components/Headers/Header.js";

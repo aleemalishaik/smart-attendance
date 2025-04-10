@@ -35,7 +35,7 @@ const Sidebar = (props) => {
     navigate("/auth/login"); // Redirect to login page
   };
 
-  const { bgColor, routes, logo } = props;
+  const {  routes, logo } = props;
 
   let navbarBrandProps;
   if (logo && logo.innerLink) {

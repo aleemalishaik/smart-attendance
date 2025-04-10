@@ -66,6 +66,11 @@ const SystemSettings = () => {
 
   return (
     <>
+      {notification && (
+        <Alert color={notification.type} toggle={() => setNotification(null)} className="alert-slide-up fade show">
+          {notification.message}
+        </Alert>
+      )}
       <Header />
       <Container className="mt--7" fluid>
         <Row>
@@ -75,11 +80,6 @@ const SystemSettings = () => {
                 <h3 className="mb-0">SYSTEM SETTINGS</h3>
               </CardHeader>
               <CardBody>
-                {notification && (
-                  <Alert color={notification.type} toggle={() => setNotification(null)}>
-                    {notification.message}
-                  </Alert>
-                )}
 
                 {settings ? (
                   <div>
@@ -93,9 +93,9 @@ const SystemSettings = () => {
                 )}
               </CardBody>
             </Card>
-                <Button color="primary" onClick={() => setIsModalOpen(true)}>
-                  Edit Settings
-                </Button>
+            <Button color="primary" onClick={() => setIsModalOpen(true)}>
+              Edit Settings
+            </Button>
           </div>
         </Row>
       </Container>

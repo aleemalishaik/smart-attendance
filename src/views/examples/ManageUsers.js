@@ -173,6 +173,12 @@ const ManageUsers = () => {
 
   return (
     <>
+      {/* ✅ Notification Alert */}
+      {notification && (
+        <UncontrolledAlert color={notification.type} className="alert-slide-up alert-dismissible" fade>
+          <span className="alert-inner--text">{notification.message}</span>
+        </UncontrolledAlert>
+      )}
       <Header />
       <Container className="mt--7" fluid>
         <Row>
@@ -223,12 +229,7 @@ const ManageUsers = () => {
 
           </div>
         </Row>
-        {/* ✅ Notification Alert */}
-        {notification && (
-          <UncontrolledAlert color={notification.type} fade>
-            <span className="alert-inner--text">{notification.message}</span>
-          </UncontrolledAlert>
-        )}
+
       </Container>
 
       {/* ✅ Update User Modal */}

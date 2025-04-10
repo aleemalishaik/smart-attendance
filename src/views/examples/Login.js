@@ -12,7 +12,7 @@ import {
   InputGroupText,
   InputGroup,
   Col,
-  Alert,
+  UncontrolledAlert
 } from "reactstrap";
 
 const Login = () => {
@@ -55,72 +55,72 @@ const Login = () => {
   };
 
   return (
-    <Col lg="4" md="8">
-      <Card className="bg-secondary shadow border-0">
-        <CardBody className="px-lg-4 py-lg-4">
-          <div>
-            <center>
-              <i className="ni ni-single-02" />
-            </center>
-          </div>
-          <div className="text-center text-muted mb-4">
-            <small>
-              <strong>LOGIN WITH YOUR CREDENTIALS</strong>
-            </small>
-          </div>
-
-          {error && <Alert color="danger">{error}</Alert>} {/* Show error if login fails */}
-
-          <Form role="form" onSubmit={handleLogin}>
-            {/* Identifier Field (Username or Email) */}
-            <FormGroup className="mb-3">
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="ni ni-circle-08" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  placeholder="Username or Email" // ✅ Updated placeholder
-                  type="text"
-                  autoComplete="username"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
-                  required
-                />
-              </InputGroup>
-            </FormGroup>
-
-            {/* Password Field */}
-            <FormGroup>
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="ni ni-lock-circle-open" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  placeholder="Password"
-                  type="password"
-                  autoComplete="new-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </InputGroup>
-            </FormGroup>
-
-            {/* Login Button */}
+    <>
+      {/* Floating alert outside the login card */}
+      {error && (
+        <div className="login-alert-wrapper">
+          <UncontrolledAlert color="danger" fade className="alert-slide-up alert-dismissible">
+            <span className="alert-inner--text">{error}</span>
+          </UncontrolledAlert>
+        </div>
+      )}
+  
+      <Col lg="4" md="8">
+        <Card className="bg-secondary shadow border-0">
+          <CardBody className="px-lg-4 py-lg-4">
             <div className="text-center">
-              <Button className="my-4" color="primary" type="submit" disabled={loading}>
-                {loading ? "Logging in..." : "LOGIN"}
-              </Button>
+              <i className="ni ni-single-02" />
             </div>
-          </Form>
-        </CardBody>
-      </Card>
-    </Col>
+            <div className="text-center text-muted mb-4">
+              <small><strong>LOGIN WITH YOUR CREDENTIALS</strong></small>
+            </div>
+  
+            <Form role="form" onSubmit={handleLogin}>
+              {/* Identifier Field */}
+              <FormGroup className="mb-3">
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText><i className="ni ni-circle-08" /></InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Username or Email"
+                    type="text"
+                    autoComplete="username"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    required
+                  />
+                </InputGroup>
+              </FormGroup>
+  
+              {/* Password Field */}
+              <FormGroup>
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText><i className="ni ni-lock-circle-open" /></InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    placeholder="Password"
+                    type="password"
+                    autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </InputGroup>
+              </FormGroup>
+  
+              <div className="text-center">
+                <Button className="my-4" color="primary" type="submit" disabled={loading}>
+                  {loading ? "Logging in..." : "LOGIN"}
+                </Button>
+              </div>
+            </Form>
+          </CardBody>
+        </Card>
+      </Col>
+    </>
   );
-};
+}  
 
 export default Login;

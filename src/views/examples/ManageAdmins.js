@@ -28,7 +28,6 @@ const ManageAdmins = () => {
     const [selectedAdmin, setSelectedAdmin] = useState({ id: 0, username: "", email: "", isSuperAdmin: false, createdAtFormatted: "" });
     const [notification, setNotification] = useState(null);
     const [addAdminModalOpen, setAddAdminModalOpen] = useState(false);
-    const [isSuperAdmin, setisSuperAdmin] = useState(false);
     const [newAdmin, setNewAdmin] = useState({ username: "", email: "", password: "", isSuperAdmin: false });
 
 
@@ -154,6 +153,12 @@ const ManageAdmins = () => {
 
     return (
         <>
+            {/* ✅ Notification Alert */}
+            {notification && (
+                <UncontrolledAlert color={notification.type} className="alert-slide-up alert-dismissible" fade>
+                    <span className="alert-inner--text">{notification.message}</span>
+                </UncontrolledAlert>
+            )}
             <Header />
             <Container className="mt--7" fluid>
                 <Row>
@@ -198,12 +203,7 @@ const ManageAdmins = () => {
 
                     </div>
                 </Row>
-                {/* ✅ Notification Alert */}
-                {notification && (
-                    <UncontrolledAlert color={notification.type} fade>
-                        <span className="alert-inner--text">{notification.message}</span>
-                    </UncontrolledAlert>
-                )}
+
             </Container>
 
             {/* ✅ Update User Modal */}
@@ -292,7 +292,6 @@ const ManageAdmins = () => {
                     <Button color="secondary" onClick={() => setAddAdminModalOpen(false)}>Cancel</Button>
                 </ModalFooter>
             </Modal>
-
 
         </>
     );

@@ -60,7 +60,7 @@ const CapturePhoto = ({ onScanComplete }) => {
         return () => clearTimeout(timeout); // Cleanup timeout
     }, [error, successMessage]);
 
-    return (
+     return (
         <Col lg="5" md="8">
             <Card className="bg-secondary shadow border-0">
                 <CardBody className="px-lg-4 py-lg-4 text-center">
@@ -79,14 +79,14 @@ const CapturePhoto = ({ onScanComplete }) => {
 
                     {/* Show Success Message */}
                     {successMessage && (
-                        <Alert color="success" className="mt-3 fade show">
+                        <Alert color="success" className="mt-3 alert-slide-up fade show">
                             {successMessage}
                         </Alert>
                     )}
 
                     {/* Show Error Message */}
                     {error && (
-                        <Alert color="danger" className="mt-3 fade show">
+                        <Alert color="danger" className="mt-3 alert-slide-up fade show">
                             {error}
                         </Alert>
                     )}
